@@ -2,19 +2,34 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlogDemo.Api.Extensions;
 using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
 using BlogDemo.DB.Repositories;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace BlogDemo.Api
 {
     public class StartupDevelopment
     {
+        public static IConfiguration Configuration { get; set; }
+
+        /// <summary>
+        /// 构造函数添加配置文件读取
+        /// </summary>
+        /// <param name="configuration"></param>
+        public StartupDevelopment(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         //服务注册
         public void ConfigureServices(IServiceCollection services)
         {
@@ -23,7 +38,10 @@ namespace BlogDemo.Api
             //配置数据库连接，    注入数据库
             services.AddDbContext<MyContext>(options => 
             {
-                options.UseSqlite("Data Source=BlogDemo.db");
+                var a = Configuration["ConnectionStrings:DefaultConnection"];
+                var connnectionString = Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlite(connnectionString);
+                //options.UseSqlite("Data Source=BlogDemo.db");
             });
 
             //Https重定向配置
@@ -38,9 +56,10 @@ namespace BlogDemo.Api
         }
 
         //配置中间件
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
-            app.UseDeveloperExceptionPage();
+            //app.UseDeveloperExceptionPage();//程序报错之后页面显示错误信息（网页样式较好）
+            app.UsrMyExceptionHandler(loggerFactory);
 
             app.UseHttpsRedirection();
 
