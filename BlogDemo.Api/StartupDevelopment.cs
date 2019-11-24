@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
+using BlogDemo.DB.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -30,6 +32,9 @@ namespace BlogDemo.Api
                 options.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
                 options.HttpsPort = 5001;
             });
+
+            services.AddScoped<IPostRepository, PostRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         //配置中间件
@@ -38,6 +43,7 @@ namespace BlogDemo.Api
             app.UseDeveloperExceptionPage();
 
             app.UseHttpsRedirection();
+
             app.UseMvc();
 
             app.Run(async (context) =>
