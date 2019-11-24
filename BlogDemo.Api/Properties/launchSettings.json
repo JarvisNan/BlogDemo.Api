@@ -17,7 +17,8 @@
     },
     "BlogDemo.Api": {
       "commandName": "Project",
-      "launchBrowser": true,
+      "launchBrowser": true, //启动程序的时候打开浏览器
+      "launchUrl": "http://localhost:5000/api/values",   //启动默认地址
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
