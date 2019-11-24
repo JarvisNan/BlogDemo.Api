@@ -3,6 +3,7 @@ using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,17 +16,22 @@ namespace BlogDemo.Api.Controllers
     {
         private readonly IPostRepository _postRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ILogger<PostController> _logger;
 
-        public PostController(IPostRepository postRepository, IUnitOfWork unitOfWork)
+        public PostController(IPostRepository postRepository, IUnitOfWork unitOfWork, ILogger<PostController> logger)
         {
             _postRepository = postRepository;
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get() 
         {
             var posts = await _postRepository.GetAllPostsAsync();
+
+            _logger.LogError("Get All Post.......");
+            
             return Ok(posts);
         }
 

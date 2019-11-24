@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Events;
 
 namespace BlogDemo.Api
 {
@@ -17,6 +19,14 @@ namespace BlogDemo.Api
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()  //日志输出最小级别
+                .MinimumLevel.Override("Microsoft", LogEventLevel.Information)  //如果日志输出命名空间是Microsoft开头，就修改级别为Inforrmation
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(Path.Combine("logs", @"log.txt"), rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             var host = CreateWebHostBuilder(args).Build();
 
             using (var scope = host.Services.CreateScope())
@@ -42,6 +52,7 @@ namespace BlogDemo.Api
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 //.UseStartup<Startup>();
-                .UseStartup(typeof(StartupDevelopment).GetTypeInfo().Assembly.FullName); //使用自定义startup类
+                .UseStartup(typeof(StartupDevelopment).GetTypeInfo().Assembly.FullName)  //使用自定义startup类
+                .UseSerilog(); 
     }
 }

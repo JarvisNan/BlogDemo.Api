@@ -1,0 +1,64 @@
+2019-11-24 21:45:53.307 +08:00 [INF] Entity Framework Core 2.1.14-servicing-32113 initialized 'MyContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: None
+2019-11-24 21:45:54.630 +08:00 [INF] Executed DbCommand (37ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+PRAGMA foreign_keys=ON;
+2019-11-24 21:45:54.659 +08:00 [INF] Executed DbCommand (1ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM "Posts" AS "p")
+    THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT)
+END
+2019-11-24 21:45:56.051 +08:00 [INF] User profile is available. Using 'C:\Users\Jarvis\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2019-11-24 21:45:58.250 +08:00 [DBG] Failed to authenticate HTTPS connection.
+System.IO.IOException: Authentication failed because the remote party has closed the transport stream.
+   at System.Net.Security.SslState.StartReadFrame(Byte[] buffer, Int32 readBytes, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.StartReceiveBlob(Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.ForceAuthentication(Boolean receiveFirst, Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.ProcessAuthentication(LazyAsyncResult lazyResult)
+   at System.Net.Security.SslStream.BeginAuthenticateAsServer(SslServerAuthenticationOptions sslServerAuthenticationOptions, CancellationToken cancellationToken, AsyncCallback asyncCallback, Object asyncState)
+   at System.Net.Security.SslStream.<>c.<AuthenticateAsServerAsync>b__51_0(SslServerAuthenticationOptions arg1, CancellationToken arg2, AsyncCallback callback, Object state)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1,TArg2](Func`5 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, TArg2 arg2, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync[TArg1,TArg2](Func`5 beginMethod, Action`1 endMethod, TArg1 arg1, TArg2 arg2, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync[TArg1,TArg2](Func`5 beginMethod, Action`1 endMethod, TArg1 arg1, TArg2 arg2, Object state)
+   at System.Net.Security.SslStream.AuthenticateAsServerAsync(SslServerAuthenticationOptions sslServerAuthenticationOptions, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionAdapter.InnerOnConnectionAsync(ConnectionAdapterContext context)
+2019-11-24 21:45:58.250 +08:00 [DBG] Failed to authenticate HTTPS connection.
+System.IO.IOException: Authentication failed because the remote party has closed the transport stream.
+   at System.Net.Security.SslState.StartReadFrame(Byte[] buffer, Int32 readBytes, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.StartReceiveBlob(Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.ForceAuthentication(Boolean receiveFirst, Byte[] buffer, AsyncProtocolRequest asyncRequest)
+   at System.Net.Security.SslState.ProcessAuthentication(LazyAsyncResult lazyResult)
+   at System.Net.Security.SslStream.BeginAuthenticateAsServer(SslServerAuthenticationOptions sslServerAuthenticationOptions, CancellationToken cancellationToken, AsyncCallback asyncCallback, Object asyncState)
+   at System.Net.Security.SslStream.<>c.<AuthenticateAsServerAsync>b__51_0(SslServerAuthenticationOptions arg1, CancellationToken arg2, AsyncCallback callback, Object state)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncImpl[TArg1,TArg2](Func`5 beginMethod, Func`2 endFunction, Action`1 endAction, TArg1 arg1, TArg2 arg2, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync[TArg1,TArg2](Func`5 beginMethod, Action`1 endMethod, TArg1 arg1, TArg2 arg2, Object state, TaskCreationOptions creationOptions)
+   at System.Threading.Tasks.TaskFactory.FromAsync[TArg1,TArg2](Func`5 beginMethod, Action`1 endMethod, TArg1 arg1, TArg2 arg2, Object state)
+   at System.Net.Security.SslStream.AuthenticateAsServerAsync(SslServerAuthenticationOptions sslServerAuthenticationOptions, CancellationToken cancellationToken)
+   at Microsoft.AspNetCore.Server.Kestrel.Https.Internal.HttpsConnectionAdapter.InnerOnConnectionAsync(ConnectionAdapterContext context)
+2019-11-24 21:46:01.521 +08:00 [INF] Request starting HTTP/1.1 GET http://localhost:5000/api/values  
+2019-11-24 21:46:01.795 +08:00 [INF] Request finished in 274.4509ms 307 
+2019-11-24 21:46:02.127 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:5001/api/values  
+2019-11-24 21:46:02.854 +08:00 [INF] Route matched with {action = "Get", controller = "Value"}. Executing controller action with signature Microsoft.AspNetCore.Mvc.IActionResult Get() on controller BlogDemo.Api.Controllers.ValueController (BlogDemo.Api).
+2019-11-24 21:46:02.879 +08:00 [INF] Executing action method BlogDemo.Api.Controllers.ValueController.Get (BlogDemo.Api) - Validation state: "Valid"
+2019-11-24 21:46:02.886 +08:00 [INF] Executed action method BlogDemo.Api.Controllers.ValueController.Get (BlogDemo.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 0.6347ms.
+2019-11-24 21:46:02.904 +08:00 [INF] Executing ObjectResult, writing value of type 'System.String'.
+2019-11-24 21:46:02.920 +08:00 [INF] Executed action BlogDemo.Api.Controllers.ValueController.Get (BlogDemo.Api) in 59.3157ms
+2019-11-24 21:46:02.926 +08:00 [INF] Request finished in 798.9509ms 200 text/plain; charset=utf-8
+2019-11-24 21:46:03.068 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:5001/favicon.ico  
+2019-11-24 21:46:03.072 +08:00 [INF] Request finished in 4.062ms 200 
+2019-11-24 21:46:10.939 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:5001/api/posts  
+2019-11-24 21:46:11.047 +08:00 [INF] Route matched with {action = "Get", controller = "Post"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Get() on controller BlogDemo.Api.Controllers.PostController (BlogDemo.Api).
+2019-11-24 21:46:11.055 +08:00 [INF] Executing action method BlogDemo.Api.Controllers.PostController.Get (BlogDemo.Api) - Validation state: "Valid"
+2019-11-24 21:46:11.098 +08:00 [INF] Entity Framework Core 2.1.14-servicing-32113 initialized 'MyContext' using provider 'Microsoft.EntityFrameworkCore.Sqlite' with options: None
+2019-11-24 21:46:11.233 +08:00 [INF] Executed DbCommand (0ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+PRAGMA foreign_keys=ON;
+2019-11-24 21:46:11.348 +08:00 [INF] Executed DbCommand (14ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT "p"."Id", "p"."Author", "p"."Body", "p"."LastModified", "p"."Title"
+FROM "Posts" AS "p"
+2019-11-24 21:46:11.562 +08:00 [ERR] Get All Post.......
+2019-11-24 21:46:11.564 +08:00 [INF] Executed action method BlogDemo.Api.Controllers.PostController.Get (BlogDemo.Api), returned result Microsoft.AspNetCore.Mvc.OkObjectResult in 507.833ms.
+2019-11-24 21:46:11.568 +08:00 [INF] Executing ObjectResult, writing value of type 'System.Collections.Generic.List`1[[BlogDemo.Core.Entities.Post, BlogDemo.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2019-11-24 21:46:11.764 +08:00 [INF] Executed action BlogDemo.Api.Controllers.PostController.Get (BlogDemo.Api) in 710.3432ms
+2019-11-24 21:46:11.769 +08:00 [INF] Request finished in 829.6549ms 200 application/json; charset=utf-8
+2019-11-24 21:46:11.783 +08:00 [INF] Request starting HTTP/1.1 GET https://localhost:5001/favicon.ico  
+2019-11-24 21:46:11.785 +08:00 [INF] Request finished in 2.1701ms 200 
