@@ -8,12 +8,16 @@ using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
 using BlogDemo.DB.Repositories;
 using BlogDemo.DB.Resources;
+using BlogDemo.DB.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -69,6 +73,19 @@ namespace BlogDemo.Api
 
             //添加数据验证
             services.AddTransient<IValidator<PostResource>,PostResourceValidator>();
+
+            //UrlHeler
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddScoped<IUrlHelper>(factory =>
+            {
+                var actionContext = factory.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
+
+            //排序
+            var propertyMappingContainer = new PropertyMappingContainer();
+            propertyMappingContainer.Register<PostPropertyMapping>();
+            services.AddSingleton<IPropertyMappingContainer>(propertyMappingContainer);
         }
 
         //配置中间件
