@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,7 +37,13 @@ namespace BlogDemo.Api
         //服务注册
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(
+                options => 
+                {
+                    options.ReturnHttpNotAcceptable = true;   //客户端返回类型开启校验，.net core默认是Json格式
+
+                    options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());   //接受xml格式的数据
+                });
 
             //配置数据库连接，    注入数据库
             services.AddDbContext<MyContext>(options => 

@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using BlogDemo.Api.Resources;
+using BlogDemo.DB.Resources;
 using BlogDemo.Core.Entities;
 using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
@@ -51,6 +51,22 @@ namespace BlogDemo.Api.Controllers
             
             return Ok(postResources);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            var post = await _postRepository.GetPostByIdAsync(id);
+
+            if (post == null)
+            {
+                return NotFound(); //没有找到返回404
+            }
+            //转化实体
+            var postResource = _mapper.Map<Post, PostResource>(post);
+
+            return Ok(postResource);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> Post()
