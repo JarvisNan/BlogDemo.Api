@@ -1,4 +1,6 @@
-﻿using BlogDemo.Core.Entities;
+﻿using AutoMapper;
+using BlogDemo.Api.Resources;
+using BlogDemo.Core.Entities;
 using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
 using Microsoft.AspNetCore.Mvc;
@@ -19,16 +21,19 @@ namespace BlogDemo.Api.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<PostController> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMapper _mapper;
 
         public PostController(IPostRepository postRepository, 
             IUnitOfWork unitOfWork, 
             ILogger<PostController> logger, 
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IMapper mapper)
         {
             _postRepository = postRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _configuration = configuration;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -36,11 +41,15 @@ namespace BlogDemo.Api.Controllers
         {
             var posts = await _postRepository.GetAllPostsAsync();
 
+            //转化实体
+            var postResources = _mapper.Map <IEnumerable<Post>, IEnumerable<PostResource>> (posts);
+
+            //读取配置文件方法
             var giao = _configuration["Key1"]; 
             var giao2 = _configuration.GetSection("Key1").Value;
             _logger.LogError("Get All Post.......");
             
-            return Ok(posts);
+            return Ok(postResources);
         }
 
         [HttpPost]

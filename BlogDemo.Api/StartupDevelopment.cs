@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using BlogDemo.Api.Extensions;
 using BlogDemo.Core.Interfaces;
 using BlogDemo.DB.DataBase;
 using BlogDemo.DB.Repositories;
+using BlogDemo.DB.Resources;
+using FluentValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -53,6 +56,12 @@ namespace BlogDemo.Api
 
             services.AddScoped<IPostRepository, PostRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //添加对象映射
+            services.AddAutoMapper();
+
+            //添加数据验证
+            services.AddTransient<IValidator<PostResource>,PostResourceValidator>();
         }
 
         //配置中间件
