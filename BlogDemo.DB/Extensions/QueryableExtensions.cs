@@ -10,7 +10,7 @@ namespace BlogDemo.DB.Extensions
     {
         public static IQueryable<T> ApplySort<T>(this IQueryable<T> source, string orderBy, IPropertyMapping propertyMapping)
         {
-            if (source == null)
+            if (source == null )
             {
                 throw new ArgumentNullException(nameof(source));
             }
