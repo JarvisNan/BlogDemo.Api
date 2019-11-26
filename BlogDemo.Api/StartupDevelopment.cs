@@ -22,6 +22,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace BlogDemo.Api
 {
@@ -47,6 +48,10 @@ namespace BlogDemo.Api
                     options.ReturnHttpNotAcceptable = true;   //客户端返回类型开启校验，.net core默认是Json格式
 
                     options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());   //接受xml格式的数据
+                })
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();//资源塑性时字段小写
                 });
 
             //配置数据库连接，    注入数据库
