@@ -17,6 +17,7 @@ using BlogDemo.Infrastructure.Extensions;
 using BlogDemo.DB.Services;
 using BlogDemo.Infrastructure.Resources;
 using BlogDemo.Api.Helpers;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace BlogDemo.Api.Controllers
 {
@@ -177,22 +178,129 @@ namespace BlogDemo.Api.Controllers
         }
 
 
-        [HttpPost]
-        public async Task<IActionResult> Post()
+        [HttpPost(Name = "CreatePost")]
+        [RequestHeaderMatchingMediaType("Content-Type", new[] { "application/vnd.cgzl.post.create+json" })]
+        [RequestHeaderMatchingMediaType("Accept", new[] { "application/vnd.cgzl.hateoas+json" })]
+        public async Task<IActionResult> Post([FromBody] PostAddResource postAddResource)
         {
-            var post = new Post()
+            if (postAddResource == null)
             {
-                Author = "admin",
-                Body = "123",
-                Title = "a",
-                LastModified = DateTime.Now
-            };
-            _postRepository.AddPost(post);
+                return BadRequest();
+            }
 
-            await _unitOfWork.SaveAsync();
+            if (!ModelState.IsValid)
+            {
+                return new MyUnprocessableEntityObjectResult(ModelState);
+            }
 
-            return Ok();
+            var newPost = _mapper.Map<PostAddResource, Post>(postAddResource);
+
+            newPost.Author = "admin";
+            newPost.LastModified = DateTime.Now;
+
+            _postRepository.AddPost(newPost);
+
+            if (!await _unitOfWork.SaveAsync())
+            {
+                throw new Exception("Save Failed!");
+            }
+
+            var resultResource = _mapper.Map<Post, PostResource>(newPost);
+
+            var links = CreateLinksForPost(newPost.Id);
+            var linkedPostResource = resultResource.ToDynamic() as IDictionary<string, object>;
+            linkedPostResource.Add("links", links);
+
+            return CreatedAtRoute("GetPost", new { id = linkedPostResource["Id"] }, linkedPostResource);
         }
+
+        [HttpDelete("{id}", Name = "DeletePost")]
+        public async Task<IActionResult> DeletePost(int id)
+        {
+            var post = await _postRepository.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            _postRepository.Delete(post);
+
+            if (!await _unitOfWork.SaveAsync())
+            {
+                throw new Exception($"Deleting post {id} failed when saving.");
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}", Name = "UpdatePost")]
+        [RequestHeaderMatchingMediaType("Content-Type", new[] { "application/vnd.cgzl.post.update+json" })]
+        public async Task<IActionResult> UpdatePost(int id, [FromBody] PostUpdateResource postUpdate)
+        {
+            if (postUpdate == null)
+            {
+                return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new MyUnprocessableEntityObjectResult(ModelState);
+            }
+
+            var post = await _postRepository.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            post.LastModified = DateTime.Now;
+            _mapper.Map(postUpdate, post);
+
+            if (!await _unitOfWork.SaveAsync())
+            {
+                throw new Exception($"Updating post {id} failed when saving.");
+            }
+            return NoContent();
+        }
+
+        [HttpPatch("{id}", Name = "PartiallyUpdatePost")]
+        public async Task<IActionResult> PartiallyUpdateCityForCountry(int id,
+            [FromBody] JsonPatchDocument<PostUpdateResource> patchDoc)
+        {
+            if (patchDoc == null)
+            {
+                return BadRequest();
+            }
+
+            var post = await _postRepository.GetPostByIdAsync(id);
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            var postToPatch = _mapper.Map<PostUpdateResource>(post);
+
+            patchDoc.ApplyTo(postToPatch, ModelState);
+
+            TryValidateModel(postToPatch);
+
+            if (!ModelState.IsValid)
+            {
+                return new MyUnprocessableEntityObjectResult(ModelState);
+            }
+
+            _mapper.Map(postToPatch, post);
+            post.LastModified = DateTime.Now;
+            _postRepository.Update(post);
+
+            if (!await _unitOfWork.SaveAsync())
+            {
+                throw new Exception($"Patching city {id} failed when saving.");
+            }
+
+            return NoContent();
+        }
+
 
         private string CreatePostUri(PostParameters parameters, PaginationResourceUriType uriType)
         {

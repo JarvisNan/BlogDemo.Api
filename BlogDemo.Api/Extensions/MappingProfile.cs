@@ -18,6 +18,8 @@ namespace BlogDemo.Api.Extensions
             //对象属性映射，不同属性名方法如下
             CreateMap<Post,PostResource>().ForMember(a => a.UpdateTime, b => b.MapFrom( c => c.LastModified ));
             CreateMap<PostResource, Post>();
+            CreateMap<PostAddResource, Post>();
+            CreateMap<PostUpdateResource, Post>();
         }
     }
 }

@@ -9,7 +9,9 @@ using BlogDemo.DB.DataBase;
 using BlogDemo.DB.Repositories;
 using BlogDemo.DB.Resources;
 using BlogDemo.DB.Services;
+using BlogDemo.Infrastructure.Resources;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -47,12 +49,25 @@ namespace BlogDemo.Api
                 {
                     options.ReturnHttpNotAcceptable = true;   //客户端返回类型开启校验，.net core默认是Json格式
 
-                    options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());   //接受xml格式的数据
+                    //options.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());   //接受xml格式的数据
+                    var intputFormatter = options.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
+                    if (intputFormatter != null)
+                    {
+                        intputFormatter.SupportedMediaTypes.Add("application/vnd.cgzl.post.create+json");
+                        intputFormatter.SupportedMediaTypes.Add("application/vnd.cgzl.post.update+json");
+                    }
+
+                    var outputFormatter = options.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
+                    if (outputFormatter != null)
+                    {
+                        outputFormatter.SupportedMediaTypes.Add("application/vnd.cgzl.hateoas+json");
+                    }
                 })
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();//资源塑性时字段小写
-                });
+                })
+                .AddFluentValidation();
 
             //配置数据库连接，    注入数据库
             services.AddDbContext<MyContext>(options => 
@@ -77,7 +92,8 @@ namespace BlogDemo.Api
             services.AddAutoMapper();
 
             //添加数据验证
-            services.AddTransient<IValidator<PostResource>,PostResourceValidator>();
+            services.AddTransient<IValidator<PostAddResource>,PostAddOrUpdateResourceValidator<PostAddResource>>();
+            services.AddTransient<IValidator<PostUpdateResource>, PostAddOrUpdateResourceValidator<PostUpdateResource>>();
 
             //UrlHeler
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
