@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "MvcClient": {
+      "commandName": "Project",
+      "launchBrowser": true, //启动程序的时候打开浏览器
+      "launchUrl": "https://localhost:7001/", //启动默认地址
+      "applicationUrl": "https://localhost:7001;http://localhost:7000",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+
+    }
+  }
+}

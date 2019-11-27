@@ -1,13 +1,13 @@
 ﻿{
   "profiles": {
-    "BlogDemo.Api": {
+    "Host": {
       "commandName": "Project",
       "launchBrowser": true, //启动程序的时候打开浏览器
-      "launchUrl": "http://localhost:6000/api/posts",   //启动默认地址
-      "applicationUrl": "https://localhost:6001;http://localhost:6000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:5001;http://localhost:5000"
+
     }
   }
 }
